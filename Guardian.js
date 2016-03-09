@@ -7,8 +7,8 @@ function Guardian(_player_, _filter_) {
 	this.filter = _filter_;
 
 	this.silence = function() {
-
-		this.player.mute(); // mutes the player
+		if(!this.player.isMuted())
+			this.player.mute(); // mutes the player
 	}
 
 	this.speak = function() {
@@ -16,9 +16,14 @@ function Guardian(_player_, _filter_) {
 			this.player.unMute(); // unmutes the player
 	}
 
-	this.skip = function() {
+	this.skip = function(to) {
 
-		this.player.seekTo(0, true); // skips a scene
+		this.player.seekTo(to, true); // skips a scene
+	}
+
+	this.getTime = function() {
+		// returns time in seconds
+		return Math.floor(this.player.getCurrentTime());
 	}
 
 	this.protect = function() {
@@ -41,13 +46,24 @@ function loop(g, i) {
 	if(g.monitoring) {
 		// TODO: monitoring and execution code
 		// 1. Get Current Time in the Video
-		var index = Math.floor(g.player.getCurrentTime());
+		var index = g.getTime();
 
 		// 2. Lookup Time-Stamp in Hashtable
-		if(index != i)
-			console.log(g.filter[index]);
+		var key = "t_" + index;
+		if(index != i && (key in g.filter))
+		{
+			var sifter = g.filter[key];
 
-		// 3. Execute Hash Key Command
+			// 3. Execute Hash Key Command
+			if(sifter.mute) {
+				g.silence();
+			}
+			else if(!sifter.mute) {
+				g.speak();
+			}
+			if(sifter.skip)
+				g.skip(sifter.skipTo);
+		}
 
 		//this.current_int = (this.current_int+1)%TIME_INT;
 		setTimeout(function(){loop(g, index);}, TIMEOUT);
