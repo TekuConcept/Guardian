@@ -2,6 +2,7 @@
 <html>
   <body>
     <div id="player"></div>
+    <script src="AVL_Tree.js"></script>
     <script src="Guardian.js"></script>
     <script src="TestFilter.js"></script>
     <script>
@@ -23,6 +24,7 @@
           }
         });
         console.log(player);
+        filter = new Filter(t_filter);
         guardian = new Guardian(player, filter);
       }
 

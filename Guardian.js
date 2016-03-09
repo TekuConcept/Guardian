@@ -1,6 +1,13 @@
 var TIME_INT = 4;
 var TIMEOUT = 1000 / TIME_INT; // 250 ms
 
+/*
+	@brief  The main filter control over the YouTube player
+	@param  _player_  YT.Player object which defines the YouTube
+                      iFrame control.
+	@param  _filter_  Filter object which holds the list of specific
+	                  filters, and other useful data.
+*/
 function Guardian(_player_, _filter_) {
 	this.monitoring = false;
 	this.player = _player_;
@@ -52,8 +59,8 @@ function loop(g, i) {
 		var key = "t_" + index;
 		if(index != i)
 		{
-			if(key in g.filter) {
-				var sifter = g.filter[key];
+			if(key in g.filter.list) {
+				var sifter = g.filter.list[key];
 
 				// 3a. Execute Hash Key Command
 				if(sifter.mute) {
@@ -77,4 +84,21 @@ function loop(g, i) {
 		//this.current_int = (this.current_int+1)%TIME_INT;
 		setTimeout(function(){loop(g, index);}, TIMEOUT);
 	}
+}
+
+function Sift(_mute_, _skip_, _to_) {
+	this.mute = _mute_;
+	this.skip = _skip_;
+	this.skipTo = _to_;
+}
+
+/*
+	@brief  Provides a list of filters, and functions for determining
+	        things like current filter state.
+	@param  _list_  A hash array with keys formatted as follows:
+	                list["t_" + time_in_seconds];
+*/
+function Filter(_list_) {
+	// Hash of 'Sift' objects
+	this.list = _list_;
 }
