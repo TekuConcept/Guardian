@@ -26,7 +26,7 @@ function Guardian(_player_, _filter_) {
 		console.log("Protecting...");
 		if(!this.monitoring) {
 			this.monitoring = true;
-			loop(this);
+			loop(this, -1);
 		}
 	}
 
@@ -37,18 +37,19 @@ function Guardian(_player_, _filter_) {
 	}
 }
 
-function loop(g) {
+function loop(g, i) {
 	if(g.monitoring) {
 		// TODO: monitoring and execution code
 		// 1. Get Current Time in the Video
 		var index = Math.floor(g.player.getCurrentTime());
 
 		// 2. Lookup Time-Stamp in Hashtable
-		console.log(g.filter[index]);
+		if(index != i)
+			console.log(g.filter[index]);
 
 		// 3. Execute Hash Key Command
 
 		//this.current_int = (this.current_int+1)%TIME_INT;
-		setTimeout(function(){loop(g);}, TIMEOUT);
+		setTimeout(function(){loop(g, index);}, TIMEOUT);
 	}
 }
