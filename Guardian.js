@@ -1,6 +1,8 @@
-var TIMEOUT = 250; // 250 ms
+var TIME_INT = 4;
+var TIMEOUT = 1000 / TIME_INT; // 250 ms
 
 function Guardian(player) {
+	this.current_int = 0;
 	this.monitoring = false;
 	this.player = player;
 
@@ -24,7 +26,7 @@ function Guardian(player) {
 		console.log("Protecting...");
 		if(!this.monitoring) {
 			this.monitoring = true;
-			//this.loop();
+			loop(this);
 		}
 	}
 
@@ -33,11 +35,13 @@ function Guardian(player) {
 		console.log("Protection has been halted!");
 		this.monitoring = false;
 	}
+}
 
-	this.loop = function() {
-		if(this.monitoring) {
-			// TODO: monitoring and execution code
-			setTimeout(this.loop, TIMEOUT);
-		}
+function loop(g) {
+	if(g.monitoring) {
+		// TODO: monitoring and execution code
+		console.log("looping..." + TIMEOUT);
+		//this.current_int = (this.current_int+1)%TIME_INT;
+		setTimeout(function(){loop(g);}, TIMEOUT);
 	}
 }
