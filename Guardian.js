@@ -1,4 +1,4 @@
-int TIMEOUT = 250; // 250 ms
+var TIMEOUT = 250; // 250 ms
 
 function Guardian(player) {
 	this.monitoring = false;
@@ -22,20 +22,20 @@ function Guardian(player) {
 	this.protect = function() {
 		// continuously monitor player position
 		console.log("Protecting...");
-		if(!monitoring) {
-			monitoring = true;
-			this.loop();
+		if(!this.monitoring) {
+			this.monitoring = true;
+			//this.loop();
 		}
 	}
 
 	this.halt = function() {
 		// pause monitoring
 		console.log("Protection has been halted!");
-		monitoring = false;
+		this.monitoring = false;
 	}
 
 	this.loop = function() {
-		if(monitoring) {
+		if(this.monitoring) {
 			// TODO: monitoring and execution code
 			setTimeout(this.loop, TIMEOUT);
 		}
