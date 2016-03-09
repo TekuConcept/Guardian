@@ -3,6 +3,7 @@
   <body>
     <div id="player"></div>
     <script src="Guardian.js"></script>
+    <script src="TestFilter.js"></script>
     <script>
       var tag = document.createElement('script');
       tag.src = "https://www.youtube.com/iframe_api";
@@ -10,6 +11,7 @@
       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
       var player;
+      var guardian;
       function onYouTubeIframeAPIReady() {
         player = new YT.Player('player', {
           height: '390',
@@ -20,8 +22,9 @@
             'onStateChange': onPlayerStateChange
           }
         });
+        console.log(player);
+        guardian = new Guardian(player, filter);
       }
-      var guardian = new Guardian(player);
 
       function onPlayerReady(event) {
 

@@ -1,10 +1,10 @@
 var TIME_INT = 4;
 var TIMEOUT = 1000 / TIME_INT; // 250 ms
 
-function Guardian(player) {
-	this.current_int = 0;
+function Guardian(_player_, _filter_) {
 	this.monitoring = false;
-	this.player = player;
+	this.player = _player_;
+	this.filter = _filter_;
 
 	this.silence = function() {
 
@@ -40,7 +40,14 @@ function Guardian(player) {
 function loop(g) {
 	if(g.monitoring) {
 		// TODO: monitoring and execution code
-		console.log("looping..." + TIMEOUT);
+		// 1. Get Current Time in the Video
+		var index = Math.floor(g.player.getCurrentTime());
+
+		// 2. Lookup Time-Stamp in Hashtable
+		console.log(g.filter[index]);
+
+		// 3. Execute Hash Key Command
+
 		//this.current_int = (this.current_int+1)%TIME_INT;
 		setTimeout(function(){loop(g);}, TIMEOUT);
 	}
