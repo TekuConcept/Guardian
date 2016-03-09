@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <div id="player"></div>
+    <script src="Bootstrap.js"></script>
+    <script>
+      var tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+      var player;
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+          height: '390',
+          width: '640',
+          videoId: 'M7lc1UVf-VE',
+          events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+          }
+        });
+      }
+      var guardian = new Guardian(player);
+
+      function onPlayerReady(event) {
+
+        event.target.playVideo();
+      }
+
+      var playing = false; // prevent duplicate playing calls
+      function onPlayerStateChange(event) {
+        if (event.data == YT.PlayerState.PLAYING && !playing) {
+          playing = true;
+          console.log("playing");
+        }
+        if (event.data == YT.PlayerState.PAUSED) {
+          playing = false;
+          console.log("paused");
+        }
+        if (event.data == YT.PlayerState.ENDED) {
+          playing = false;
+          console.log("ended");
+        }
+      }
+    </script>
+  </body>
+</html>
