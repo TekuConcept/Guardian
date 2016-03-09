@@ -50,19 +50,28 @@ function loop(g, i) {
 
 		// 2. Lookup Time-Stamp in Hashtable
 		var key = "t_" + index;
-		if(index != i && (key in g.filter))
+		if(index != i)
 		{
-			var sifter = g.filter[key];
+			if(key in g.filter) {
+				var sifter = g.filter[key];
 
-			// 3. Execute Hash Key Command
-			if(sifter.mute) {
-				g.silence();
+				// 3a. Execute Hash Key Command
+				if(sifter.mute) {
+					g.silence();
+				}
+				else if(!sifter.mute) {
+					g.speak();
+				}
+				if(sifter.skip)
+					g.skip(sifter.skipTo);
 			}
-			else if(!sifter.mute) {
-				g.speak();
+			else {
+				// 3b. Check Nearest Key
+				//     * If the user manually seeks to position
+				//     that should be skipped or muted, we want
+				//     to make  sure  the  filter  is  properly
+				//     applied.
 			}
-			if(sifter.skip)
-				g.skip(sifter.skipTo);
 		}
 
 		//this.current_int = (this.current_int+1)%TIME_INT;
