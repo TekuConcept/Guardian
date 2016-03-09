@@ -2,7 +2,7 @@
 <html>
   <body>
     <div id="player"></div>
-    <script src="Bootstrap.js"></script>
+    <script src="Guardian.js"></script>
     <script>
       var tag = document.createElement('script');
       tag.src = "https://www.youtube.com/iframe_api";
@@ -32,15 +32,18 @@
       function onPlayerStateChange(event) {
         if (event.data == YT.PlayerState.PLAYING && !playing) {
           playing = true;
-          console.log("playing");
+          guardian.protect();
+          //console.log("playing");
         }
         if (event.data == YT.PlayerState.PAUSED) {
           playing = false;
-          console.log("paused");
+          guardian.halt();
+          //console.log("paused");
         }
         if (event.data == YT.PlayerState.ENDED) {
           playing = false;
-          console.log("ended");
+          guardian.halt();
+          //console.log("ended");
         }
       }
     </script>
