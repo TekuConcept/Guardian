@@ -10,8 +10,10 @@ var TIMEOUT = 1000 / TIME_INT; // 250 ms
 */
 function Guardian(_player_, _filter_) {
 	this.monitoring = false;
+	this.userUpdated= false;
 	this.player = _player_;
 	this.filter = _filter_;
+	this.cIndex = 0;
 
 	this.silence = function() {
 		if(!this.player.isMuted())
@@ -35,17 +37,27 @@ function Guardian(_player_, _filter_) {
 
 	this.protect = function() {
 		// continuously monitor player position
-		console.log("Protecting...");
+		//console.log("Protecting... ");
+		// check if we need to recall previous filter
+		if((this.getTime() - this.cIndex) !== 0) {
+			this.userUpdated = true;
+		}
+
 		if(!this.monitoring) {
+			// resume normal filtering
 			this.monitoring = true;
 			loop(this, -1);
 		}
 	}
 
-	this.halt = function() {
+	this.halt = function(_ended_) {
 		// pause monitoring
-		console.log("Protection has been halted!");
+		//console.log("Protection has been halted!");
 		this.monitoring = false;
+
+		// reset user seek flag
+		if(_ended_)
+			this.userUpdated = false;
 	}
 }
 
@@ -53,11 +65,11 @@ function loop(g, i) {
 	if(g.monitoring) {
 		// TODO: monitoring and execution code
 		// 1. Get Current Time in the Video
-		var index = g.getTime();
+		g.cIndex = g.getTime();
 
 		// 2. Lookup Time-Stamp in Hashtable
-		var key = "t_" + index;
-		if(index != i)
+		var key = "t_" + g.cIndex;
+		if(g.cIndex != i)
 		{
 			if(key in g.filter.list) {
 				var sifter = g.filter.list[key];
@@ -71,18 +83,25 @@ function loop(g, i) {
 				}
 				if(sifter.skip)
 					g.skip(sifter.skipTo);
+
+				// if filter was found, no need to find the previous
+				// key during the next loop call
+				if(g.userUpdated)
+					g.userUpdated = false;
 			}
-			else {
+			else if(g.userUpdated) {
 				// 3b. Check Nearest Key
 				//     * If the user manually seeks to position
 				//     that should be skipped or muted, we want
 				//     to make  sure  the  filter  is  properly
 				//     applied.
+				console.log("User manually seeked to...");
+				g.userUpdated = false;
 			}
 		}
 
 		//this.current_int = (this.current_int+1)%TIME_INT;
-		setTimeout(function(){loop(g, index);}, TIMEOUT);
+		setTimeout(function(){loop(g, g.cIndex);}, TIMEOUT);
 	}
 }
 
