@@ -95,7 +95,8 @@ function loop(g, i) {
 				//     that should be skipped or muted, we want
 				//     to make  sure  the  filter  is  properly
 				//     applied.
-				console.log("User manually seeked to...");
+				//console.log("User manually seeked to...");
+
 				g.userUpdated = false;
 			}
 		}
@@ -120,4 +121,34 @@ function Sift(_mute_, _skip_, _to_) {
 function Filter(_list_) {
 	// Hash of 'Sift' objects
 	this.list = _list_;
+	this.list_index = new Array();
+	this.list_size = 0;
+
+	// add hash names to list
+	this.init = function() {
+		var i = 0;
+		for(var tag in this.list) {
+			this.list_index[i] = parseInt(tag.substring(2));
+			i++;
+		}
+		this.list_size = i;
+		// sort in ascending
+		this.list_index.sort(function(a, b){return a-b});
+		//console.log(this.list_index);
+		//console.log("Test: " + this.nearest_left(15));
+	}
+
+	// returns the nearest left neighbor
+	this.nearest_left = function(_key_) {
+		var _min_ = 0;
+		var _max_ = this.list_size;
+		while(_min_ <= _max_) {
+			var mid = Math.floor((_min_ + _max_) / 2);
+			if(this.list_index[mid] <= _key_)
+				_min_ = mid + 1;
+			else
+				_max_ = mid - 1;
+		}
+		return _max_;
+	}
 }
