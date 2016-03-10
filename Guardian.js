@@ -63,7 +63,7 @@ function Guardian(_player_, _filter_) {
 	this.execute = function(_sift_) {
 		if(_sift_.mute)
 			this.silence();
-		else if(!_sift_.mute)
+		else //if(!_sift_.mute)
 			this.speak();
 		// skip must be performed separately so that mute and skip
 		// commands can be executed in one call
