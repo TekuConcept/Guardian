@@ -59,6 +59,18 @@ function Guardian(_player_, _filter_) {
 		if(_ended_)
 			this.userUpdated = false;
 	}
+
+	this.execute = function(_sift_) {
+		if(_sift_.mute)
+			this.silence();
+		else if(!_sift_.mute)
+			this.speak();
+		// skip must be performed separately so that mute and skip
+		// commands can be executed in one call
+		if(_sift_.skip && this.cIndex < _sift_.skipTo) {
+			this.skip(_sift_.skipTo);
+		}
+	}
 }
 
 function loop(g, i) {
@@ -73,16 +85,7 @@ function loop(g, i) {
 		{
 			if(key in g.filter.list) {
 				var sifter = g.filter.list[key];
-
-				// 3a. Execute Hash Key Command
-				if(sifter.mute) {
-					g.silence();
-				}
-				else if(!sifter.mute) {
-					g.speak();
-				}
-				if(sifter.skip)
-					g.skip(sifter.skipTo);
+				g.execute(sifter);
 
 				// if filter was found, no need to find the previous
 				// key during the next loop call
@@ -96,8 +99,14 @@ function loop(g, i) {
 				//     to make  sure  the  filter  is  properly
 				//     applied.
 				//console.log("User manually seeked to...");
-
 				g.userUpdated = false;
+				var idx = g.filter.nearest_left(g.cIndex);
+				if(idx < 0)
+					return; // no filters have been applied yet
+				else {
+					var sifter = g.filter.getFromIndex(idx);
+					g.execute(sifter);
+				}
 			}
 		}
 
@@ -136,6 +145,11 @@ function Filter(_list_) {
 		this.list_index.sort(function(a, b){return a-b});
 		//console.log(this.list_index);
 		//console.log("Test: " + this.nearest_left(15));
+	}
+
+	this.getFromIndex = function(index) {
+
+		return this.list["t_"+this.list_index[index]];
 	}
 
 	// returns the nearest left neighbor
