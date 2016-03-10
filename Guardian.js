@@ -101,8 +101,9 @@ function loop(g, i) {
 				//console.log("User manually seeked to...");
 				g.userUpdated = false;
 				var idx = g.filter.nearest_left(g.cIndex);
-				if(idx < 0)
-					return; // no filters have been applied yet
+				if(idx < 0) {  // no filters have been applied yet
+					g.speak(); // reset speaker volume
+				}
 				else {
 					var sifter = g.filter.getFromIndex(idx);
 					g.execute(sifter);
