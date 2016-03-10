@@ -2,6 +2,7 @@
 <html>
   <body>
     <div id="player"></div>
+    <!--<script src="AVL_Tree.js"></script>-->
     <script src="Guardian.js"></script>
     <script src="TestFilter.js"></script>
     <script>
@@ -13,6 +14,9 @@
       var player;
       var guardian;
       function onYouTubeIframeAPIReady() {
+        filter = new Filter(t_filter);
+        filter.init();
+
         player = new YT.Player('player', {
           height: '390',
           width: '640',
@@ -22,6 +26,7 @@
             'onStateChange': onPlayerStateChange
           }
         });
+        
         console.log(player);
         guardian = new Guardian(player, filter);
       }
