@@ -1,5 +1,5 @@
-var TIME_INT = 4;
-var TIMEOUT = 1000 / TIME_INT; // 250 ms
+var TIME_INT = 10;
+var TIMEOUT = 1000 / TIME_INT; // 100 ms
 
 /*
 	@brief  The main filter control over the YouTube player
@@ -32,7 +32,7 @@ function Guardian(_player_, _filter_) {
 
 	this.getTime = function() {
 		// returns time in seconds
-		return Math.floor(this.player.getCurrentTime());
+		return Math.round(this.player.getCurrentTime()*2)/2;
 	}
 
 	this.protect = function() {
@@ -78,6 +78,7 @@ function loop(g, i) {
 		// TODO: monitoring and execution code
 		// 1. Get Current Time in the Video
 		g.cIndex = g.getTime();
+		setTimeout(function(){loop(g, g.cIndex);}, TIMEOUT);
 
 		// 2. Lookup Time-Stamp in Hashtable
 		var key = "t_" + g.cIndex;
@@ -110,9 +111,6 @@ function loop(g, i) {
 				}
 			}
 		}
-
-		//this.current_int = (this.current_int+1)%TIME_INT;
-		setTimeout(function(){loop(g, g.cIndex);}, TIMEOUT);
 	}
 }
 
@@ -138,7 +136,7 @@ function Filter(_list_) {
 	this.init = function() {
 		var i = 0;
 		for(var tag in this.list) {
-			this.list_index[i] = parseInt(tag.substring(2));
+			this.list_index[i] = parseFloat(tag.substring(2));
 			i++;
 		}
 		this.list_size = i;
