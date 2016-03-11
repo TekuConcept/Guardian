@@ -1,8 +1,26 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <title>Guardian Filters</title>
+    <link rel="stylesheet" type="text/css" href="Content/styles.css">
+  </head>
   <body>
-    <center><div id="player"></div></center>
-    <!--<script src="AVL_Tree.js"></script>-->
+    <div id="menu_panel">
+      <img id="logo" src="Content/logo.svg"
+          onerror="this.onerror=null; this.src='Content/logo.png'">
+      <form id="search">
+        <input class="search" type="text" placeholder="Search..."
+          required>
+        <input class="button" type="button" value="Search">
+      </form>
+    </div>
+    <div id="media_panel">
+      <div id="player_panel">
+        <div id="player"></div>
+      </div>
+    </div>
+    <div id="content_panel" class="shadow"></div>
+
     <script src="Guardian.js"></script>
     <script src="TestFilter.js"></script>
     <script>
@@ -18,8 +36,8 @@
         filter.init();
 
         player = new YT.Player('player', {
-          height: '390',
-          width: '640',
+          //height: '390',
+          //width: '640',
           videoId: v_id,
           events: {
             'onReady': onPlayerReady,
@@ -33,7 +51,7 @@
 
       function onPlayerReady(event) {
 
-        event.target.playVideo();
+        //event.target.playVideo();
       }
 
       var playing = false; // prevent duplicate playing calls
